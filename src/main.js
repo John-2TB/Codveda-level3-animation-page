@@ -5,6 +5,13 @@ import { ScrollTrigger, SplitText } from "gsap/all";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
+const video = document.getElementById('cocktail-video');
+const isMobile = window.matchMedia('(max-width: 767px)').matches;
+
+if (isMobile) {
+  console.log('User is on a mobile device');
+}
+
 // Nav blur effect
 const navTween = gsap.timeline({
   scrollTrigger: {
@@ -54,7 +61,7 @@ gsap.timeline({
     trigger: '#hero',
     start: 'top top',
     end: 'bottom top',
-    scrub: 1,
+    scrub: true,
   }
 })
 .to('.right-leaf', {
@@ -63,3 +70,30 @@ gsap.timeline({
 .to('.left-leaf', {
   y: -200
 }, 0)
+const startValue = isMobile ? 'top 50%' : 'center 60%';
+const endValue = isMobile ? '120% top' : 'bottom top';
+
+const videoTimeLine = gsap.timeline({
+  scrollTrigger: {
+    trigger: video,
+    start: startValue,
+    end: endValue,
+    scrub: true,
+    pin: true,
+  }
+});
+
+// Function to attach the tween
+function setupVideoScrub() {
+  videoTimeLine.to(video, {
+    currentTime: video.duration,
+    ease: 'none'
+  });
+}
+
+// Handle metadata loading cleanly
+if (video.readyState >= 1) {
+  setupVideoScrub();
+} else {
+  video.onloadedmetadata = setupVideoScrub;
+}
