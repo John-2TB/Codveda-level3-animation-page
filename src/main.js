@@ -1,4 +1,6 @@
 import './style.css';
+import { cocktailLists } from './constant';
+import { mockTailLists } from './constant';
 
 import { gsap } from "gsap";
 import { ScrollTrigger, SplitText } from "gsap/all";
@@ -24,7 +26,7 @@ navTween.fromTo('nav', {
   background: "transparent",
 }, {
   background: '#00000050',
-  backgroundFilter: 'blur(10px)',
+  backdropFilter: 'blur(10px)',
   duration: 1,
   ease: 'power1.inOut',
 });
@@ -97,3 +99,50 @@ if (video.readyState >= 1) {
 } else {
   video.onloadedmetadata = setupVideoScrub;
 }
+
+// Rendering cocktail list
+const cocktailListContainer = document.getElementById('cocktail-list');
+const mocktailListContainer = document.getElementById('mocktail-list');
+
+const cocktailListItemsHTML = cocktailLists.map((drink) => `
+  <li>
+    <div class="md:me-28">
+      <h3>${drink.name}</h3>
+      <p>${drink.country} | ${drink.detail}</p>
+    </div>
+    <span>- ${drink.price}</span>
+  </li>
+`).join('');
+
+cocktailListContainer.innerHTML = cocktailListItemsHTML;
+
+// Mocktail HTML render
+const mocktailListItemsHTML = mockTailLists.map((drink) => `
+  <li>
+    <div class="me-28">
+      <h3>${drink.name}</h3>
+      <p>${drink.country} | ${drink.detail}</p>
+    </div>
+    <span>- ${drink.price}</span>
+  </li>
+`).join('');
+
+mocktailListContainer.innerHTML = mocktailListItemsHTML;
+
+const cocktailLeafTimeline = gsap.timeline({
+  scrollTrigger: {
+    trigger: '#cocktails',
+    start: 'top 30%',
+    end: 'bottom 80%',
+    scrub: true,
+  }
+});
+
+cocktailLeafTimeline.from('#c-left-leaf', {
+  x: -100,
+  y: 100
+})
+.from('#c-right-leaf', {
+  x: 100,
+  y: 100
+});
