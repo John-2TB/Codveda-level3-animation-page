@@ -1,11 +1,12 @@
-import './style.css';
-import { cocktailLists } from './constant';
-import { mockTailLists } from './constant';
-
 import { gsap } from "gsap";
 import { ScrollTrigger, SplitText } from "gsap/all";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
+
+import './style.css';
+import { cocktailLists, featureLists } from './constant';
+import { mockTailLists } from './constant';
+import { goodLists } from './constant';
 
 const video = document.getElementById('cocktail-video');
 const isMobile = window.matchMedia('(max-width: 767px)').matches;
@@ -172,3 +173,56 @@ scrollTimeline.from(aboutSplitText.words, {
   ease: 'power1.inOut',
   stagger: 0.04
 }, '-=0.5')
+
+// The Art section
+const goodsListsContainer = document.getElementById('goods-list');
+
+const goodsListsHTML = goodLists.map((items) => `
+  <li class="flex items-center gap-2">
+    <img src="/images/check.png" alt="check">
+    <p>${items}</p>
+  </li>
+`).join('');
+
+goodsListsContainer.innerHTML = goodsListsHTML;
+
+
+const featuresListsContainer = document.getElementById('features-list');
+
+const featuresListsHTML = featureLists.map((items) => `
+  <li class="flex items-center gap-2 justify-start">
+    <img src="/images/check.png" alt="check">
+    <p class="md:w-fit w-60">${items}</p>
+  </li>
+`).join('');
+
+featuresListsContainer.innerHTML = featuresListsHTML;
+
+const start = isMobile ? 'top 20%' : 'top top';
+
+const maskTimeline = gsap.timeline({
+  scrollTrigger: {
+    trigger: '#art',
+    start,
+    scrub: 1.5,
+    pin: true,
+  }
+});
+
+maskTimeline.to('.will-fade', {
+  opacity: 0,
+  stagger: 0.2,
+  ease: 'power.inOut'
+})
+.to('.masked-img', {
+  scale: 1.3,
+  maskPosition: 'center',
+  maskSize: '400%',
+  duration: 1,
+  ease: 'power1.inOut',
+})
+.to('#masked-content', {
+  opacity: 1,
+  duration: 1,
+  ease: 'power1.inOut'
+})
